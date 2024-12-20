@@ -27,7 +27,7 @@ exports.requestPasswordReset = async (req, res) => {
     await sendResetPasswordEmail({
       to: correo,
       name: user.nombre || 'Usuario',
-      resetLink: `https://tuapp.com/reset-password?token=${token}`,
+      resetLink: `http://localhost:3000/api/reset-password?token=${token}`,
     });
 
     res.json({ message: 'Se ha enviado un enlace de restablecimiento a tu correo electrónico.' });

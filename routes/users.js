@@ -26,7 +26,24 @@ router.delete('/delete', authenticate, userController.deleteAccount);
 
 // Ruta para obtener usuario por ID sin autenticación
 router.get('/usuarios/:id_usuario',authenticate, userController.getUserById); // Sin autenticación
+router.get('/password', async (req, res) => {
+    const { token } = req.query; // Extrae el token de los parámetros de la consulta
 
+    if (!token) {
+        return res.status(401).json({ error: 'Token no proporcionado' });
+    }
+
+    try {
+        // Aquí verifica si el token es válido (por ejemplo, con la base de datos)
+        console.log('Token recibido:', token);
+
+        // Simula una respuesta exitosa
+        res.status(200).json({ message: 'Token válido, formulario de restablecimiento' });
+    } catch (error) {
+        console.error('Error al procesar el token:', error);
+        res.status(500).json({ error: 'Error al procesar la solicitud' });
+    }
+});
 // Ruta para actualizar foto de perfil (Protegida)
 
 
