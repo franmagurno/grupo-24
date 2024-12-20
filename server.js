@@ -9,9 +9,10 @@ const projectRoutes = require('./routes/projects');
 const ticketRoutes = require('./routes/tickets');
 const notificationsRoutes = require('./routes/notification');
 const emailRoutes = require('./routes/email');
-
 const debt = require('./routes/debt');
 const multer = require('multer');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./Swagger.json'); // Cargar tu archivo Swagger.json
 
 dotenv.config(); // Carga las variables de entorno desde el archivo .env
 
@@ -36,6 +37,9 @@ const upload = multer({ storage });
 
 // Sirviendo la carpeta 'uploads' como archivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Configuración de Swagger para cargar el archivo JSON
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Rutas
 app.use('/api/users', userRoutes);
@@ -95,4 +99,5 @@ app.use((req, res) => {
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Documentación Swagger disponible en http://localhost:${PORT}/api-docs`);
 });

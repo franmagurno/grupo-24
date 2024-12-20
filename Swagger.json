@@ -1,0 +1,547 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "API Documentation",
+      "description": "API documentation for the provided services across five main modules: Projects, Notifications, Password Reset Email, Tickets, and Users."
+    },
+    "host": "localhost:3000",
+    "basePath": "/api",
+    "schemes": [
+      "http",
+      "https"
+    ],
+    "paths": {
+      "/projects/create": {
+        "post": {
+          "tags": [
+            "Projects"
+          ],
+          "summary": "Create a new project",
+          "description": "Creates a new project with optional users",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateProject"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Project created",
+              "schema": {
+                "$ref": "#/definitions/Project"
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      },
+      "/projects/user/:id/groups": {
+        "get": {
+          "tags": [
+            "Projects"
+          ],
+          "summary": "Get projects for a user",
+          "description": "Retrieves projects associated with a specific user",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Projects retrieved successfully",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Project"
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+"/projects/group/{groupId}/members": {
+  "get": {
+    "tags": [
+      "Projects"
+    ],
+    "summary": "Get members of a group",
+    "description": "Retrieve the members of a specific group by its ID",
+    "parameters": [
+      {
+        "name": "groupId",
+        "in": "path",
+        "required": true,
+        "type": "integer",
+        "description": "ID del grupo cuyos miembros serán recuperados"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Members retrieved successfully",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      },
+      "404": {
+        "description": "Group not found"
+      }
+    }
+  }
+}
+,
+      "/notifications": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Get notifications",
+          "description": "Retrieve all notifications, optionally filtered by user ID",
+          "parameters": [
+            {
+              "name": "id_usuario",
+              "in": "query",
+              "type": "integer",
+              "description": "Filter notifications by user ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Notifications retrieved successfully",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Notification"
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Create a notification",
+          "description": "Creates a new notification for a user",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateNotification"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Notification created successfully",
+              "schema": {
+                "$ref": "#/definitions/Notification"
+              }
+            }
+          }
+        }
+      },
+      "/notifications/{id_notificacion}": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Get notification by ID",
+          "description": "Retrieve a specific notification by its ID",
+          "parameters": [
+            {
+              "name": "id_notificacion",
+              "in": "path",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Notification retrieved successfully",
+              "schema": {
+                "$ref": "#/definitions/Notification"
+              }
+            },
+            "404": {
+              "description": "Notification not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Delete notification",
+          "description": "Deletes a notification by its ID",
+          "parameters": [
+            {
+              "name": "id_notificacion",
+              "in": "path",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Notification deleted successfully"
+            },
+            "404": {
+              "description": "Notification not found"
+            }
+          }
+        }
+      },
+      "/password/reset": {
+        "post": {
+          "tags": [
+            "Password Reset"
+          ],
+          "summary": "Send password reset email",
+          "description": "Sends a password reset email to the specified user",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/PasswordResetEmail"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Password reset email sent successfully"
+            },
+            "400": {
+              "description": "Error sending email"
+            }
+          }
+        }
+      },
+      "/tickets/create": {
+        "post": {
+          "tags": [
+            "Tickets"
+          ],
+          "summary": "Create a ticket",
+          "description": "Creates a new ticket for a project",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateTicket"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ticket created successfully",
+              "schema": {
+                "$ref": "#/definitions/Ticket/create"
+              }
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Get all users",
+          "description": "Retrieve all users in the system",
+          "responses": {
+            "200": {
+              "description": "Users retrieved successfully",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        }},
+        "/users/register": {
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Create a user",
+          "description": "Creates a new user",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/CreateUser"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User created successfully",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "CreateProject": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "usuarios": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "id_creador": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "nombre",
+          "id_creador"
+        ]
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id_proyecto": {
+            "type": "integer"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "id_notificacion": {
+            "type": "integer"
+          },
+          "id_usuario": {
+            "type": "integer"
+          },
+          "mensaje": {
+            "type": "string"
+          },
+          "id_tipo": {
+            "type": "integer"
+          },
+          "fecha_envio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "leido": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateNotification": {
+        "type": "object",
+        "properties": {
+          "id_usuario": {
+            "type": "integer"
+          },
+          "mensaje": {
+            "type": "string"
+          },
+          "id_tipo": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id_usuario",
+          "mensaje",
+          "id_tipo"
+        ]
+      },
+      "PasswordResetEmail": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "resetLink": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "to",
+          "name",
+          "resetLink"
+        ]
+      },
+      "CreateTicket": {
+        "type": "object",
+        "properties": {
+          "id_proyecto": {
+            "type": "integer"
+          },
+          "id_usuario": {
+            "type": "integer"
+          },
+          "fecha_compra": {
+            "type": "string",
+            "format": "date"
+          },
+          "monto_total": {
+            "type": "number"
+          },
+          "imagen": {
+            "type": "string"
+          },
+          "division_type": {
+            "type": "string"
+          },
+          "porcentajes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id_usuario": {
+                  "type": "integer"
+                },
+                "porcentaje": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "descripcion": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id_proyecto",
+          "id_usuario",
+          "fecha_compra",
+          "monto_total",
+          "division_type"
+        ]
+      },
+      "Ticket": {
+        "type": "object",
+        "properties": {
+          "id_ticket": {
+            "type": "integer"
+          },
+          "id_proyecto": {
+            "type": "integer"
+          },
+          "id_usuario": {
+            "type": "integer"
+          },
+          "fecha_compra": {
+            "type": "string",
+            "format": "date"
+          },
+          "monto_total": {
+            "type": "number"
+          },
+          "imagen": {
+            "type": "string"
+          },
+          "division_type": {
+            "type": "string"
+          },
+          "porcentajes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "descripcion": {
+            "type": "string"
+          }
+        }
+      },
+"CreateUser": {
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string",
+      "description": "Nombre del usuario"
+    },
+    "correo": {
+      "type": "string",
+      "description": "Correo electrónico del usuario",
+      "format": "email"
+    },
+    "contrasena": {
+      "type": "string",
+      "description": "Contraseña del usuario",
+      "format": "password"
+    },
+    "foto_perfil": {
+      "type": "string",
+      "description": "Ruta de la foto de perfil del usuario"
+    }
+  },
+  "required": [
+    "nombre",
+    "correo",
+    "contrasena"
+  ],
+  "/users": {
+  "get": {
+    "tags": ["Users"],
+    "summary": "Get all users",
+    "description": "Retrieve all users in the system",
+    "responses": {
+      "200": {
+        "description": "Users retrieved successfully",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      },
+      "500": {
+        "description": "Error interno al obtener los usuarios"
+      }
+    }
+  }
+}
+}}}

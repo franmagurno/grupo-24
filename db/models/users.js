@@ -32,6 +32,14 @@ foto_perfil: {
   type: DataTypes.STRING, // Ruta de la foto (ejemplo: URL o path local)
   allowNull: true,
 },
+reset_token: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
+reset_token_expiration: {
+  type: DataTypes.DATE,
+  allowNull: true,
+},
 }, {
   tableName: 'Usuarios', // Nombre explícito de la tabla
   timestamps: false, // Desactiva createdAt y updatedAt

@@ -1,14 +1,14 @@
-const Debt = require('../db/models/debt'); // Importar el modelo de deudas
-const Usuario = require('../db/models/users'); // Importar el modelo de usuarios
-const UsuariosGrupos = require('../db/models/UsuariosGrupos'); // Importar UsuariosGrupos si existe
+const Debt = require('../db/models/debt'); 
+const Usuario = require('../db/models/users'); 
+const UsuariosGrupos = require('../db/models/UsuariosGrupos'); 
 const { Op } = require('sequelize'); // Importar Op
 
-// Obtener las deudas de un usuario
+
 exports.getDeudasPorUsuario = async (req, res) => {
     try {
         const id_usuario = req.params.id_usuario;
 
-        // Obtener todas las deudas donde el usuario está involucrado como deudor o acreedor
+        
         const deudas = await Debt.findAll({
             where: {
                 [Op.or]: [
@@ -16,7 +16,7 @@ exports.getDeudasPorUsuario = async (req, res) => {
                     { acreedor: { [Op.in]: idsUsuarios } },
                 ],
             },
-            attributes: ["id_deuda", "deudor", "acreedor", "monto", "estado"], // Incluye id_deuda explícitamente
+            attributes: ["id_deuda", "deudor", "acreedor", "monto", "estado"],
             include: [
                 {
                     model: Usuario,
@@ -31,7 +31,7 @@ exports.getDeudasPorUsuario = async (req, res) => {
             ],
         });
 
-        // Calcular el total de deudas (suma de todas las deudas)
+       
         const totalDeudas = deudas.reduce((total, deuda) => {
             return total + parseFloat(deuda.monto);
         }, 0);
@@ -44,19 +44,19 @@ exports.getDeudasPorUsuario = async (req, res) => {
             return {
                 ...deuda.dataValues,
                 porcentaje: esDeudor
-                    ? porcentajeDeudor.toFixed(2) // Si el usuario es el deudor
-                    : (100 - porcentajeDeudor).toFixed(2), // Si el usuario es el acreedor
+                    ? porcentajeDeudor.toFixed(2) 
+                    : (100 - porcentajeDeudor).toFixed(2),
             };
         });
 
-        // Retornar la respuesta con los porcentajes de deuda
+         
         return res.json(resultado);
     } catch (error) {
         return res.status(500).json({ error: 'Ocurrió un error al obtener las deudas.' });
     }
 };
 
-// Obtener las deudas de un grupo
+
 exports.getDeudasPorGrupo = async (req, res) => {
     try {
       const id_grupo = req.params.id_grupo;
@@ -75,7 +75,7 @@ exports.getDeudasPorGrupo = async (req, res) => {
   
       const idsUsuarios = usuariosDelGrupo.map((u) => u.User.id_usuario);
   
-      // Obtener todas las deudas entre los usuarios del grupo
+
       const deudas = await Debt.findAll({
         where: {
           [Op.or]: [
@@ -98,7 +98,7 @@ exports.getDeudasPorGrupo = async (req, res) => {
         ],
       });
   
-      // Agrupar las deudas por combinación única de deudor y acreedor
+      
       const deudasAgrupadas = {};
       deudas.forEach((deuda) => {
         if (deuda.deudor === deuda.acreedor) {
@@ -109,7 +109,7 @@ exports.getDeudasPorGrupo = async (req, res) => {
         const key = `${deuda.deudor}-${deuda.acreedor}`;
         if (!deudasAgrupadas[key]) {
           deudasAgrupadas[key] = {
-            id_deuda: deuda.id_deuda, // Confirma que esto no sea undefined
+            id_deuda: deuda.id_deuda, 
             deudor: `${deuda.usuarioDeudor.nombre} (${deuda.usuarioDeudor.correo})`,
             acreedor: `${deuda.usuarioAcreedor.nombre} (${deuda.usuarioAcreedor.correo})`,
             monto: 0,
@@ -120,13 +120,13 @@ exports.getDeudasPorGrupo = async (req, res) => {
         deudasAgrupadas[key].monto += parseFloat(deuda.monto);
       });
   
-      // Convertir el objeto agrupado en un array
+      
       const resultado = Object.values(deudasAgrupadas).map((deuda) => ({
         ...deuda,
-        monto: deuda.monto.toFixed(2), // Formatear el monto a dos decimales
+        monto: deuda.monto.toFixed(2), 
       }));
   
-      console.log("Deudas enviadas al frontend:", resultado); // Verifica si id_deuda está presente en cada objeto
+      console.log("Deudas enviadas al frontend:", resultado); 
       return res.json(resultado);
     } catch (error) {
       return res
@@ -138,7 +138,7 @@ exports.getDeudasPorGrupo = async (req, res) => {
 
   exports.updateDeudaStatus = async (req, res) => {
     const { id_deuda } = req.params;
-    console.log("ID de deuda recibido en el backend:", id_deuda); // Log para confirmar el ID recibido
+    console.log("ID de deuda recibido en el backend:", id_deuda); 
   
     try {
       const deuda = await Debt.findByPk(id_deuda);

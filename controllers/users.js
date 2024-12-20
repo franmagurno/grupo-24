@@ -125,42 +125,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-exports.changePassword = async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      console.error('Token no proporcionado.');
-      return res.status(401).json({ error: 'Token no proporcionado' });
-    }
-
-    // Decodificar el token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded token:', decoded);
-
-    const { id_usuario } = decoded;
-    if (!id_usuario) {
-      console.error('Token no contiene id_usuario.');
-      return res.status(401).json({ error: 'Token no contiene id_usuario' });
-    }
-
-    console.log('ID Usuario obtenido del token:', id_usuario);
-
-    const { contrasena_actual, nueva_contrasena } = req.body;
-
-    if (!contrasena_actual || !nueva_contrasena) {
-      return res.status(400).json({ error: 'Debe proporcionar la contraseña actual y la nueva contraseña.' });
-    }
-
-    // Llamar al servicio para cambiar la contraseña
-    await userService.changeUserPassword(id_usuario, contrasena_actual, nueva_contrasena);
-    console.log(`Contraseña actualizada exitosamente para el usuario con ID ${id_usuario}`);
-
-    res.status(200).json({ message: 'Contraseña actualizada exitosamente.' });
-  } catch (error) {
-    console.error('Error al cambiar la contraseña:', error);
-    res.status(500).json({ error: 'Error interno del servidor.' });
-  }
-};
 
 exports.deleteAccount = async (req, res) => {
   try {
@@ -190,8 +154,8 @@ exports.deleteAccount = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   try {
-    const { id_usuario } = req.params; // Aquí obtienes el parámetro de la URL
-    const user = await User.findByPk(id_usuario); // Asegúrate de usar la consulta correcta para obtener el usuario por ID
+    const { id_usuario } = req.params; 
+    const user = await User.findByPk(id_usuario); 
 
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -207,8 +171,8 @@ exports.getUserById = async (req, res) => {
 // Controlador: Actualizar perfil por ID
 exports.updateProfileById = async (req, res) => {
   try {
-    const { id_usuario } = req.params; // ID del usuario desde la URL
-    const { nombre, correo } = req.body; // Datos que se quieren actualizar
+    const { id_usuario } = req.params; 
+    const { nombre, correo } = req.body; 
 
     if (!id_usuario) {
       return res.status(400).json({ error: 'El ID del usuario es obligatorio.' });
@@ -221,13 +185,13 @@ exports.updateProfileById = async (req, res) => {
     console.log('ID Usuario:', id_usuario);
     console.log('Datos para actualizar:', { nombre, correo });
 
-    // Buscar usuario por ID
+    
     const user = await User.findByPk(id_usuario);
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
 
-    // Actualizar el usuario
+    
     const updatedUser = await user.update({ nombre, correo });
     console.log('Usuario actualizado:', updatedUser);
 
@@ -242,5 +206,36 @@ exports.updateProfileById = async (req, res) => {
   } catch (error) {
     console.error('Error al actualizar perfil:', error.message || error);
     res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+// Controlador para actualizar la foto de perfil
+exports.updateProfilePicture = async (req, res) => {
+  try {
+    
+    const { id_usuario } = req.user; 
+
+    if (!id_usuario) {
+      return res.status(400).json({ error: 'Usuario no autenticado.' });
+    }
+
+    // Verificamos si un archivo fue enviado en la solicitud
+    const fotoPerfil = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!fotoPerfil) {
+      return res.status(400).json({ error: 'No se proporcionó una foto de perfil.' });
+    }
+
+    
+    const updatedUser = await userService.updateUser(id_usuario, { foto_perfil: fotoPerfil });
+
+   
+    res.status(200).json({
+      message: 'Foto de perfil actualizada correctamente.',
+      usuario: updatedUser,
+    });
+  } catch (error) {
+    console.error('Error al actualizar la foto de perfil:', error);
+    res.status(500).json({ error: 'Error al actualizar la foto de perfil.' });
   }
 };

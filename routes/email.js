@@ -1,8 +1,9 @@
 const express = require('express');
-const { requestPasswordReset } = require('../controllers/resetPass');
+const { requestPasswordReset, resetPassword } = require('../controllers/resetPass');
 
 const router = express.Router();
 
-router.post('/send-test-email', requestPasswordReset);
+router.post('/request-password-reset', requestPasswordReset);
+router.post('/reset-password', resetPassword);
 
 module.exports = router;

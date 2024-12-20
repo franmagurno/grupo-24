@@ -60,7 +60,7 @@ const changeUserPassword = async (id_usuario, contrasena_actual, nueva_contrasen
 
   console.log('Contraseña actualizada exitosamente para el usuario con ID:', id_usuario);
 
-  // Enviar correo notificando cambio de contraseña
+  
 
 };
 

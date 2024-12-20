@@ -1,6 +1,6 @@
 const notificationService = require('../services/notifications');
 
-// Crear notificación de "Nuevo Ticket Registrado" (id_tipo = 1)
+
 exports.createNuevoTicketNotification = async (req, res) => {
   try {
     const { id_usuario, mensaje } = req.body;
@@ -8,8 +8,7 @@ exports.createNuevoTicketNotification = async (req, res) => {
       id_usuario,
       mensaje,
       id_tipo: 1,
-      // fecha_envio se asigna automáticamente por el modelo
-      // leido se inicializa en false por defecto
+      
     });
     res.status(201).json(notification);
   } catch (error) {
@@ -18,7 +17,7 @@ exports.createNuevoTicketNotification = async (req, res) => {
   }
 };
 
-// Crear notificación de "Asignación de Montos" (id_tipo = 2)
+
 exports.createAsignacionMontosNotification = async (req, res) => {
   try {
     const { id_usuario, mensaje } = req.body;
@@ -34,7 +33,7 @@ exports.createAsignacionMontosNotification = async (req, res) => {
   }
 };
 
-// Crear notificación de "Recordatorio de Pago Pendiente" (id_tipo = 3)
+
 exports.createRecordatorioPagoNotification = async (req, res) => {
   try {
     const { id_usuario, mensaje } = req.body;
@@ -50,7 +49,7 @@ exports.createRecordatorioPagoNotification = async (req, res) => {
   }
 };
 
-// Crear notificación de "Deuda Saldada" (id_tipo = 4)
+
 exports.createDeudaSaldadaNotification = async (req, res) => {
   try {
     const { id_usuario, mensaje } = req.body;
@@ -66,7 +65,7 @@ exports.createDeudaSaldadaNotification = async (req, res) => {
   }
 };
 
-// Crear notificación de "Nuevos Miembros o Cambios en el Grupo" (id_tipo = 5)
+
 exports.createNuevosMiembrosNotification = async (req, res) => {
   try {
     const { id_usuario, mensaje } = req.body;
@@ -82,7 +81,7 @@ exports.createNuevosMiembrosNotification = async (req, res) => {
   }
 };
 
-// Obtener todas las notificaciones (con filtro opcional por usuario)
+
 exports.getNotifications = async (req, res) => {
   try {
     const { id_usuario } = req.query;
@@ -94,7 +93,7 @@ exports.getNotifications = async (req, res) => {
   }
 };
 
-// Obtener una notificación por ID (ahora es id_notificacion)
+
 exports.getNotificationById = async (req, res) => {
   try {
     const { id_notificacion } = req.params;

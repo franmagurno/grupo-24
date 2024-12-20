@@ -62,7 +62,7 @@ exports.addMemberToProject = async (req, res) => {
   }
 };
 exports.deleteProject = async (req, res) => {
-  const { id_grupo } = req.params; // Suponiendo que el ID del grupo se pasa como parámetro de ruta.
+  const { id_grupo } = req.params; 
 
   try {
     // Elimina las relaciones entre usuarios y el grupo
@@ -93,20 +93,20 @@ exports.getMembersByGroupId = async (req, res) => {
       include: [
         {
           model: User,
-          as: 'User', // Asegúrate de que coincida con el alias definido en la asociación
-          attributes: ['id_usuario', 'nombre', 'correo'], // Incluir los atributos necesarios
+          as: 'User', 
+          attributes: ['id_usuario', 'nombre', 'correo'], 
         },
       ],
     });
 
-    // Obtener los detalles del grupo para incluir al creador
+    
     const group = await Project.findOne({
       where: { id_proyecto: id_grupo },
       include: [
         {
           model: User,
-          as: 'creator', // Asegúrate de que coincida con el alias definido en la asociación
-          attributes: ['id_usuario', 'nombre', 'correo'], // Incluir los atributos necesarios
+          as: 'creator', 
+          attributes: ['id_usuario', 'nombre', 'correo'], 
         },
       ],
     });
@@ -115,27 +115,27 @@ exports.getMembersByGroupId = async (req, res) => {
       return res.status(404).json({ error: 'Grupo no encontrado' });
     }
 
-    // Crear el array de miembros con rol, nombre y correo
+    
     const members = groupMembers.map((member) => ({
       id: member.User.id_usuario,
       nombre: member.User.nombre,
       correo: member.User.correo,
-      rol: member.rol || 'Miembro', // Rol basado en la relación UsuariosGrupos
+      rol: member.rol || 'Miembro', 
     }));
 
-    // Verificar si el creador ya está incluido
+    
     const creator = group.creator;
     const isCreatorIncluded = members.some(
       (member) => member.correo === creator.correo
     );
 
-    // Agregar al creador si no está ya incluido
+    
     if (!isCreatorIncluded) {
       members.push({
         id: creator.id_usuario,
         nombre: creator.nombre,
         correo: creator.correo,
-        rol: 'Creador', // Rol para el creador del grupo
+        rol: 'Creador', 
       });
     }
 
@@ -147,14 +147,14 @@ exports.getMembersByGroupId = async (req, res) => {
 };
 
 exports.deleteMemberFromGroup = async (req, res) => {
-  const { id_grupo, id_usuario } = req.params; // ID del grupo y del usuario a eliminar
+  const { id_grupo, id_usuario } = req.params; 
 
   if (!id_grupo || !id_usuario) {
     return res.status(400).json({ error: 'Debe proporcionar el id del grupo y el id del usuario.' });
   }
 
   try {
-    // Elimina la relación entre el usuario y el grupo en la tabla UsuariosGrupos
+    
     const result = await UsuariosGrupos.destroy({
       where: { id_grupo, id_usuario }
     });
@@ -180,8 +180,8 @@ exports.getGroupBalances = async (req, res) => {
       include: [
         {
           model: User,
-          as: 'usuario', // Usa el alias correcto definido en tu asociación
-          attributes: ['id_usuario', 'nombre', 'correo'], // Campos necesarios del usuario
+          as: 'usuario', 
+          attributes: ['id_usuario', 'nombre', 'correo'], 
         },
       ],
     });
